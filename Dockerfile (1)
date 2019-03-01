@@ -1,0 +1,15 @@
+FROM node:carbon
+
+COPY entrypoint.sh /entrypoint/
+
+COPY . /data/
+
+RUN ["chmod", "+x", "entrypoint/entrypoint.sh"]
+
+WORKDIR /data/
+
+EXPOSE 8080
+
+ENTRYPOINT ["sh", "/entrypoint/entrypoint.sh"]
+
+CMD ["npm","start"]

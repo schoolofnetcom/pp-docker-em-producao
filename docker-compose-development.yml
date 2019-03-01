@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+ frontend:
+    build: ./client
+    ports:
+      - 8080:8080
+    volumes:
+      - ./client:/data
+    networks:
+     - nodenet
+ database:
+  image: mongo
+  ports:
+    - 27017:27017
+  networks:
+    - nodenet 
+ backend:
+  build: ./server
+  ports:
+    - 3000:3000
+  volumes:
+    - ./server:/data
+  depends_on:
+    - database
+  environment:
+    - MONGODB_URI=mongodb://database:27017/email_marketing
+  networks:
+    - nodenet
+ sendmail:
+  image: "node:8.6.0"
+  user: "node"
+  working_dir: /data/
+  volumes:
+    - ./server:/data
+  command: "node bin/send_email_service.js"
+  environment:
+    - MONGODB_URI=mongodb://database:27017/email_marketing
+  networks:
+    - nodenet
+  
+  
+       
+networks:
+ nodenet:     

@@ -1,0 +1,47 @@
+version: '3'
+services:
+
+  database:
+    image: mysql:5.7
+    environment:
+      - "MYSQL_DATABASE=microjobs_db"
+      - "MYSQL_USER=microjobs_user"
+      - "MYSQL_PASSWORD=schoolofnet"
+      - "MYSQL_ROOT_PASSWORD=schoolofnet"
+    networks:
+      - webnet
+
+  #  The Application
+  app:
+    image: app-symfony:stag2
+    volumes:
+      - ./microjobs:/var/www/microjobs/
+    ports:
+        - 9000:9000
+    networks:
+      - webnet    
+    working_dir: /var/www/microjobs
+    env_file: 'microjobs/.env'
+    environment:
+      - "DB_HOST=database"   
+    depends_on:
+      - database
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s        
+  # The Web Server
+  web:
+    image: web:v19
+    volumes:
+      - C:/Users/Jackson/app-symfony/microjobs/public:/var/www/microjobs/public/
+    ports:
+      - 4000:80
+      - 443:443
+    networks:
+      - webnet
+    depends_on:
+      - app    
+networks:
+  webnet:
+  
