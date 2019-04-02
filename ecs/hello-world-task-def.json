@@ -1,0 +1,23 @@
+{
+    "family": "hello-world",
+    "containerDefinitions": [
+        {
+            "name": "hello-world",
+            "image": "304694038199.dkr.ecr.us-east-2.amazonaws.com/hello-ecs",
+            "cpu": 10,
+            "memory": 500,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "hostPort": 80
+                }
+            ],
+            "entryPoint": [
+                "/usr/sbin/apache2",
+                "-D",
+                "FOREGROUND"
+            ],
+            "essential": true
+        }
+    ]
+}
